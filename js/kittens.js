@@ -30,8 +30,17 @@ var images = {};
 
 
 // This section is where you will be doing most of your coding
-class Enemy {
+
+class Entity {
+  render(ctx) {
+      ctx.drawImage(this.sprite, this.x, this.y);
+  }
+}
+
+
+class Enemy extends Entity {
     constructor(xPos) {
+        super();   //no need for a parameter because the construct
         this.x = xPos;
         this.y = -ENEMY_HEIGHT;
         this.sprite = images['enemy.png'];
@@ -44,16 +53,18 @@ class Enemy {
         this.y = this.y + timeDiff * this.speed;
     }
 
-    render(ctx) {
-        ctx.drawImage(this.sprite, this.x, this.y);
-    }
+    // render(ctx) {
+    //     ctx.drawImage(this.sprite, this.x, this.y);
+    // }
 }
 
-class Player {
+class Player extends Entity {
     constructor() {
+        super();
         this.x = 2 * PLAYER_WIDTH;
         this.y = GAME_HEIGHT - PLAYER_HEIGHT - 10;
         this.sprite = images['player.png'];
+
     }
 
     // This method is called by the game engine when left/right arrows are pressed
@@ -64,10 +75,6 @@ class Player {
         else if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
             this.x = this.x + PLAYER_WIDTH;
         }
-    }
-
-    render(ctx) {
-        ctx.drawImage(this.sprite, this.x, this.y);
     }
 }
 
@@ -120,7 +127,7 @@ class Engine {
 
         var enemySpot;
         // Keep looping until we find a free enemy spot at random
-        while (!enemySpot || this.enemies[enemySpot]) {
+        while (enemySpot === 'undefined'|| this.enemies[enemySpot]) {
             enemySpot = Math.floor(Math.random() * enemySpots);
         }
 
@@ -200,7 +207,15 @@ class Engine {
 
     isPlayerDead() {
         // TODO: fix this function!
-        return false;
+        var dead = false;
+        for(var i=0; i<5;i++){
+          if(this.enemies[i] != undefined){
+            if(this.enemies[i].x == this.player.x && this.enemies[i].y >= GAME_HEIGHT - PLAYER_HEIGHT){
+              dead = true;
+            }
+          }
+        }
+        return dead;
     }
 }
 
