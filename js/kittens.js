@@ -121,9 +121,7 @@ class Engine {
         canvas.width = GAME_WIDTH;
         canvas.height = GAME_HEIGHT;
         element.appendChild(canvas);
-
         this.ctx = canvas.getContext('2d');
-
         // Since gameLoop will be called out of context, bind it once here.
         this.gameLoop = this.gameLoop.bind(this);
     }
@@ -211,9 +209,7 @@ class Engine {
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.player.render(this.ctx); // draw the player
         this.laser.render(this.ctx);
-
-        // Call update on shooting
-        //this.player.shoot.forEach(shoot.update(timeDiff))
+        this.killCat();
 
         // Check if any enemies should die  //HERE IS WHERE YOU PUT ENEMY DYING UPON SHOOT
         this.enemies.forEach((enemy, enemyIdx) => {
@@ -221,7 +217,7 @@ class Engine {
                 delete this.enemies[enemyIdx];
             }
         });
-        
+
         this.setupEnemies();
 
         // Check if player is dead
@@ -244,6 +240,17 @@ class Engine {
         }
     }
 
+    killCat(){
+      for(var i = 0; i<5; i++){
+        if(this.enemies[i] != undefined &&
+          this.enemies[i].x == this.laser.x &&
+            this.enemies[i].y > this.laser.y-100){
+              delete this.enemies[i];
+              break;
+        }
+      }
+    }
+
     isPlayerDead() {
         // TODO: fix this function!
         var dead = false;
@@ -256,16 +263,7 @@ class Engine {
         }
         return dead;
     }
-
-
-
-
-
 }
-
-
-
-
 
 // This section will start the game
 var gameEngine = new Engine(document.getElementById('app'));
