@@ -12,14 +12,16 @@ var PLAYER_HEIGHT = 54;
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
 var RIGHT_ARROW_CODE = 39;
+var SPACE_BUTTON = 32;
 
 // These two constants allow us to DRY
 var MOVE_LEFT = 'left';
 var MOVE_RIGHT = 'right';
+var SHOOTING = 'shoot'
 
 // Preload game images
 var images = {};
-['enemy.png', 'stars.png', 'player.png'].forEach(imgName => {
+['enemy.png', 'stars.png', 'player.png', 'laser.png'].forEach(imgName => {
     var img = document.createElement('img');
     img.src = 'images/' + imgName;
     images[imgName] = img;
@@ -75,6 +77,9 @@ class Player extends Entity {
         else if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
             this.x = this.x + PLAYER_WIDTH;
         }
+    }
+    shoot(){
+
     }
 }
 
@@ -147,6 +152,9 @@ class Engine {
             else if (e.keyCode === RIGHT_ARROW_CODE) {
                 this.player.move(MOVE_RIGHT);
             }
+            else if(e.keyCode === SPACE_BUTTON){
+                this.player.shoot()
+            }
         });
 
         this.gameLoop();
@@ -192,6 +200,7 @@ class Engine {
             this.ctx.font = 'bold 30px Impact';
             this.ctx.fillStyle = '#ffffff';
             this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
+
         }
         else {
             // If player is not dead, then draw the score
@@ -209,14 +218,20 @@ class Engine {
         // TODO: fix this function!
         var dead = false;
         for(var i=0; i<5;i++){
-          if(this.enemies[i] != undefined){
-            if(this.enemies[i].x == this.player.x && this.enemies[i].y >= GAME_HEIGHT - PLAYER_HEIGHT){
+          if(this.enemies[i] != undefined) {
+            if(this.enemies[i].x == this.player.x && this.enemies[i].y >= GAME_HEIGHT - PLAYER_HEIGHT - ENEMY_HEIGHT){
               dead = true;
             }
           }
         }
         return dead;
     }
+
+    playAgain(){
+
+    }
+
+
 }
 
 
