@@ -17,7 +17,7 @@ var SPACE_BUTTON = 32;
 // These two constants allow us to DRY
 var MOVE_LEFT = 'left';
 var MOVE_RIGHT = 'right';
-var SHOOTING = 'shoot'
+
 
 // Preload game images
 var images = {};
@@ -39,6 +39,26 @@ class Entity {
   }
 }
 
+class Laser extends Entity{
+  constructor(xPos){
+    super();
+    this.x = 0;
+    this.y = -100;
+    this.sprite = images['laser.png'];
+    this.speed = 0.2;
+  }
+
+  shoot(playerPos){
+    this.x = playerPos
+    this.y = GAME_HEIGHT - (PLAYER_HEIGHT*3);
+  }
+
+  update(timeDiff) {
+      this.y = this.y + timeDiff * this.speed;
+  }
+
+
+}
 
 class Enemy extends Entity {
     constructor(xPos) {
@@ -55,9 +75,6 @@ class Enemy extends Entity {
         this.y = this.y + timeDiff * this.speed;
     }
 
-    // render(ctx) {
-    //     ctx.drawImage(this.sprite, this.x, this.y);
-    // }
 }
 
 class Player extends Entity {
@@ -66,20 +83,17 @@ class Player extends Entity {
         this.x = 2 * PLAYER_WIDTH;
         this.y = GAME_HEIGHT - PLAYER_HEIGHT - 10;
         this.sprite = images['player.png'];
-
     }
 
     // This method is called by the game engine when left/right arrows are pressed
     move(direction) {
+      console.log(direction, "direction object")
         if (direction === MOVE_LEFT && this.x > 0) {
             this.x = this.x - PLAYER_WIDTH;
         }
         else if (direction === MOVE_RIGHT && this.x < GAME_WIDTH - PLAYER_WIDTH) {
             this.x = this.x + PLAYER_WIDTH;
         }
-    }
-    shoot(){
-
     }
 }
 
@@ -96,6 +110,8 @@ class Engine {
     constructor(element) {
         // Setup the player
         this.player = new Player();
+        //Setup laser
+        this.laser = new Laser();
 
         // Setup enemies, making sure there are always three
         this.setupEnemies();
@@ -126,6 +142,7 @@ class Engine {
         }
     }
 
+
     // This method finds a random spot where there is no enemy, and puts one in there
     addEnemy() {
         var enemySpots = GAME_WIDTH / ENEMY_WIDTH;
@@ -138,11 +155,14 @@ class Engine {
 
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
     }
-
+    // killCat(){
+    //   if(enemy.y == laser.y){}
+    // }
     // This method kicks off the game
     start() {
         this.score = 0;
         this.lastFrame = Date.now();
+
 
         // Listen for keyboard left/right and update the player
         document.addEventListener('keydown', e => {
@@ -152,8 +172,9 @@ class Engine {
             else if (e.keyCode === RIGHT_ARROW_CODE) {
                 this.player.move(MOVE_RIGHT);
             }
-            else if(e.keyCode === SPACE_BUTTON){
-                this.player.shoot()
+            else if (e.keyCode === SPACE_BUTTON){
+              console.log("space bar")
+               this.laser.shoot(this.player.x);
             }
         });
 
@@ -181,17 +202,26 @@ class Engine {
         // Call update on all enemies
         this.enemies.forEach(enemy => enemy.update(timeDiff));
 
+        // Call update on laser
+        this.laser.update(-timeDiff);
+
+
         // Draw everything!
         this.ctx.drawImage(images['stars.png'], 0, 0); // draw the star bg
         this.enemies.forEach(enemy => enemy.render(this.ctx)); // draw the enemies
         this.player.render(this.ctx); // draw the player
+        this.laser.render(this.ctx);
 
-        // Check if any enemies should die
+        // Call update on shooting
+        //this.player.shoot.forEach(shoot.update(timeDiff))
+
+        // Check if any enemies should die  //HERE IS WHERE YOU PUT ENEMY DYING UPON SHOOT
         this.enemies.forEach((enemy, enemyIdx) => {
             if (enemy.y > GAME_HEIGHT) {
                 delete this.enemies[enemyIdx];
             }
         });
+        
         this.setupEnemies();
 
         // Check if player is dead
@@ -227,9 +257,8 @@ class Engine {
         return dead;
     }
 
-    playAgain(){
 
-    }
+
 
 
 }
