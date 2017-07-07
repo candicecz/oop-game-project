@@ -12,7 +12,14 @@ var PLAYER_HEIGHT = 54;
 // These two constants keep us from using "magic numbers" in our code
 var LEFT_ARROW_CODE = 37;
 var RIGHT_ARROW_CODE = 39;
+var TOP_ARROW_CODE = 38;
 var SPACE_BUTTON = 32;
+
+//LEFT HANDED OPTIONS
+var SHOOT_W = 87;
+var LEFT_A = 65;
+var RIGHT_D = 68;
+
 
 // These two constants allow us to DRY
 var MOVE_LEFT = 'left';
@@ -112,7 +119,6 @@ class Engine {
         this.player = new Player();
         //Setup laser
         this.laser = new Laser();
-
         // Setup enemies, making sure there are always three
         this.setupEnemies();
 
@@ -153,30 +159,36 @@ class Engine {
 
         this.enemies[enemySpot] = new Enemy(enemySpot * ENEMY_WIDTH);
     }
-    // killCat(){
-    //   if(enemy.y == laser.y){}
-    // }
+
     // This method kicks off the game
     start() {
         this.score = 0;
         this.lastFrame = Date.now();
 
 
-        // Listen for keyboard left/right and update the player
+
+        // Listen for keyboard left/right/shoot and update the player
         document.addEventListener('keydown', e => {
-            if (e.keyCode === LEFT_ARROW_CODE) {
+            if (e.keyCode === LEFT_ARROW_CODE || e.keyCode === LEFT_A) {
                 this.player.move(MOVE_LEFT);
             }
-            else if (e.keyCode === RIGHT_ARROW_CODE) {
+            else if (e.keyCode === RIGHT_ARROW_CODE || e.keyCode === RIGHT_D) {
                 this.player.move(MOVE_RIGHT);
             }
-            else if (e.keyCode === SPACE_BUTTON){
-              console.log("space bar")
+            else if (e.keyCode === TOP_ARROW_CODE || e.keyCode === SHOOT_W){
+                console.log("top arrow")
                this.laser.shoot(this.player.x);
+            }
+            else if (e.keyCode === SPACE_BUTTON){
+              if(this.isPlayerDead()){
+                this.score = 0;
+              }
+                this.gameLoop();
             }
         });
 
         this.gameLoop();
+
     }
 
     /*
@@ -195,6 +207,7 @@ class Engine {
         var timeDiff = currentFrame - this.lastFrame;
 
         // Increase the score!
+
         this.score += timeDiff;
 
         // Call update on all enemies
@@ -217,15 +230,26 @@ class Engine {
                 delete this.enemies[enemyIdx];
             }
         });
+        // 
+        // this.laser(){
+        //   if(laser.y>GAME_HEIGHT){
+        //       delete this.laser;
+        //   }
+        // }
 
         this.setupEnemies();
 
         // Check if player is dead
+
         if (this.isPlayerDead()) {
-            // If they are dead, then it's game over!
+          // If they are dead, then it's game over!
             this.ctx.font = 'bold 30px Impact';
             this.ctx.fillStyle = '#ffffff';
-            this.ctx.fillText(this.score + ' GAME OVER', 5, 30);
+            this.ctx.fillText('SCORE : '+ this.score, 110, 120);
+            this.ctx.fillText('GAME  OVER', 115, 162.5);
+            this.ctx.fillText('PRESS  SPACE', 101, 267.5);
+            this.ctx.fillText('TO  RESTART', 109, 307.5);
+
 
         }
         else {
@@ -246,25 +270,33 @@ class Engine {
           this.enemies[i].x == this.laser.x &&
             this.enemies[i].y > this.laser.y-100){
               delete this.enemies[i];
+              // if(this.enemies[i] === undefined){
+              //   delete this.laser;
+              // }
               break;
         }
       }
     }
 
     isPlayerDead() {
-        // TODO: fix this function!
         var dead = false;
         for(var i=0; i<5;i++){
           if(this.enemies[i] != undefined) {
             if(this.enemies[i].x == this.player.x && this.enemies[i].y >= GAME_HEIGHT - PLAYER_HEIGHT - ENEMY_HEIGHT){
               dead = true;
+              console.log(dead);
             }
           }
         }
         return dead;
     }
+
 }
 
 // This section will start the game
 var gameEngine = new Engine(document.getElementById('app'));
 gameEngine.start();
+
+//make a controls section
+
+//fix shoot
