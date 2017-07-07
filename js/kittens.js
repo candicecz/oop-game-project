@@ -53,19 +53,24 @@ class Laser extends Entity{
     this.y = -100;
     this.sprite = images['laser.png'];
     this.speed = 0.2;
+    this.boom = false;
   }
 
   shoot(playerPos){
     this.x = playerPos
     this.y = GAME_HEIGHT - (PLAYER_HEIGHT*3);
+    this.boom = true;
   }
 
   update(timeDiff) {
-      this.y = this.y + timeDiff * this.speed;
+    this.y<(-PLAYER_HEIGHT) ?  function(){
+      this.y = 600}.bind(this)() :
+    function () {
+      if (this.y != 600) { this.y = this.y - timeDiff * this.speed;}
+    }.bind(this)();
   }
-
-
 }
+
 
 class Enemy extends Entity {
     constructor(xPos) {
@@ -121,7 +126,7 @@ class Engine {
         this.laser = new Laser();
         // Setup enemies, making sure there are always three
         this.setupEnemies();
-
+        // this.setupBullets();
         // Setup the <canvas> element where we will be drawing
         var canvas = document.createElement('canvas');
         canvas.width = GAME_WIDTH;
@@ -176,15 +181,15 @@ class Engine {
                 this.player.move(MOVE_RIGHT);
             }
             else if (e.keyCode === TOP_ARROW_CODE || e.keyCode === SHOOT_W){
-                console.log("top arrow")
+              if(!this.laser.boom || this.laser.y > 450){
                this.laser.shoot(this.player.x);
+             }
             }
-            else if (e.keyCode === SPACE_BUTTON){
-              if(this.isPlayerDead()){
+            else if (e.keyCode === SPACE_BUTTON && this.isPlayerDead()){
                 this.score = 0;
               }
                 this.gameLoop();
-            }
+
         });
 
         this.gameLoop();
@@ -214,7 +219,7 @@ class Engine {
         this.enemies.forEach(enemy => enemy.update(timeDiff));
 
         // Call update on laser
-        this.laser.update(-timeDiff);
+        this.laser.update(timeDiff);
 
 
         // Draw everything!
@@ -230,15 +235,10 @@ class Engine {
                 delete this.enemies[enemyIdx];
             }
         });
-        // 
-        // this.laser(){
-        //   if(laser.y>GAME_HEIGHT){
-        //       delete this.laser;
-        //   }
-        // }
+
 
         this.setupEnemies();
-
+        // this.setupBullets();
         // Check if player is dead
 
         if (this.isPlayerDead()) {
@@ -265,14 +265,11 @@ class Engine {
     }
 
     killCat(){
-      for(var i = 0; i<5; i++){
+    for(var i = 0; i<5; i++){
         if(this.enemies[i] != undefined &&
           this.enemies[i].x == this.laser.x &&
             this.enemies[i].y > this.laser.y-100){
               delete this.enemies[i];
-              // if(this.enemies[i] === undefined){
-              //   delete this.laser;
-              // }
               break;
         }
       }

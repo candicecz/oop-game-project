@@ -4,12 +4,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Exploding Kittens</title>
+<style>
+*{
+  margin:0px;
+  padding:0px;
+}
+
+h2{
+  /*margin-top:20px;*/
+  font-family: Arial;
+  font-size:50px;
+  color: white;
+  text-align: center;
+  text-shadow: 3px 2px #0779ad;
+  margin: 5px;
+}
+.controls{
+  height:70px;
+  width:300px;
+  margin-top:5px;
+  padding: 5px;
+  background-color: white;
+  border-radius:5px;
+  font-family: Arial;
+  text-align:center;
+  font-size:15px;
+  color: black;
+}
+
+
+</style>
 </head>
+
 <body background = "images/11.jpg">
-    <center><div id="app"></div></center>
-    <audio autoplay>
-      <source src="music/space.mp3">
-    </audio>
-    <script src="js/kittens.js"></script>
+<center>
+  <h2>Nyan Cat Game</h2>
+  <div id="app"></div>
+  <div class = "controls">
+    <strong><p>CONTROLS</p>
+    <p>LEFT/RIGHT ARROW = MOVE</p>
+    <p>UP ARROW = SHOOT</p></strong>
+  </div>
+</center>
+  <audio autoplay>
+    <source src="music/space.mp3">
+  </audio>
+  <script src="js/kittens.js"></script>
 </body>
 </html>
