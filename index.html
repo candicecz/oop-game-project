@@ -3,52 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Exploding Kittens</title>
+
 <style>
 *{
   margin:0px;
   padding:0px;
+  font-family: arial,sans-serif;
+  font-weight: bold;
 }
 
 h2{
-  /*margin-top:20px;*/
-  font-family: Arial;
   font-size:50px;
-  color: white;
+  color:#ffcfe3;
+  width: 500px;
+  background-color: #ff5098;
+  border-radius:5px;
+  border: 2px solid #ffcfe3;
   text-align: center;
-  text-shadow: 3px 2px #0779ad;
-  margin: 5px;
+  text-shadow: 2px 1px #e52d79;
+  margin: 8px;
 }
+canvas {
+  margin-top:5px;
+  border: 5px solid #ffcfe3;
+  border-radius: 5px;
+ }
 .controls{
-  height:70px;
+  height:100px;
   width:300px;
   margin-top:5px;
-  padding: 5px;
-  background-color: white;
+  padding-top: 7.5px;
+  background-color: #ff5098;
   border-radius:5px;
-  font-family: Arial;
+  border: 2px solid #ffcfe3;
   text-align:center;
   font-size:15px;
-  color: black;
+  color: #ffcfe3;
 }
-
-
 </style>
 </head>
 
-<body background = "images/11.jpg">
+<body background = "images/sky_background.jpg">
 <center>
   <h2>Nyan Cat Game</h2>
   <div id="app"></div>
   <div class = "controls">
-    <strong><p>CONTROLS</p>
-    <p>LEFT/RIGHT ARROW = MOVE</p>
-    <p>UP ARROW = SHOOT</p></strong>
+    <p style="font-size:20px;">CONTROLS</p>
+    <p>MOVE</p>
+    <p>LEFT and RIGHT</p>
+    <p>SHOOT</p>
+    <p>UP</p>
   </div>
 </center>
-  <audio autoplay>
+
+<audio autoplay>
     <source src="music/space.mp3">
-  </audio>
-  <script src="js/kittens.js"></script>
+</audio>
+
+<script src="js/kittens.js"></script>
 </body>
 </html>

@@ -52,7 +52,7 @@ class Laser extends Entity{
     this.x = 0;
     this.y = -100;
     this.sprite = images['laser.png'];
-    this.speed = 0.2;
+    this.speed = 0.25;
     this.boom = false;
   }
 
@@ -187,9 +187,8 @@ class Engine {
             }
             else if (e.keyCode === SPACE_BUTTON && this.isPlayerDead()){
                 this.score = 0;
-              }
                 this.gameLoop();
-
+              }
         });
 
         this.gameLoop();
